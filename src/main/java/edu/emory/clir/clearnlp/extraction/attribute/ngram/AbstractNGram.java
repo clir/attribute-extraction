@@ -15,102 +15,31 @@
  */
 package edu.emory.clir.clearnlp.extraction.attribute.ngram;
 
-import java.io.Serializable;
-import java.util.Set;
-
-import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.ISmoothing;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.ISmoothing;
 
 /**
  * @author 	Yu-Hsin(Henry) Chen ({@code yu-hsin.chen@emory.edu})
  * @version	1.0
  * @since 	Sep 7, 2015
  */
-public abstract class AbstractNGram<T> implements Serializable{
+public abstract class AbstractNGram<T> extends AbstractSuperNGram{
 	private static final long serialVersionUID = 7598468521841113603L;
 
-	private final int N;
-	protected int i_totalCount;
-	protected int i_keyCount;
-	protected int i_skipOffset;
-	protected ISmoothing smoothing;
 	protected Object2ObjectMap<String, AbstractNGram<?>> m_ngrams;
 	
-	public AbstractNGram(int n){ N = n;}
-	
-	
-	public AbstractNGram(ISmoothing smoothing, int n){
+	public AbstractNGram(int n, ISmoothing smoothing){
+		super(n, smoothing);
 		m_ngrams = new Object2ObjectOpenHashMap<>();
-		setSmoothing(smoothing);
-		N = n;
 	}
 	
-	public int getSkipOffset(){
-		return i_skipOffset;
-	}
-	
-	public abstract T getBest();
-	
-	public abstract T getUnigramMap();
-
-	public abstract Set<String> getWordSet();
-	
-	public void estimateLikelihood(){
-		smoothing.estimateMaximumLikelihoods(this);
-	}
-	
-	
-	public double getLikelihood(String... words){
-		return 0;
-		
-	}
-	
-	public void add(long inc,String... words){
-		if(words.length != N) throw new IllegalArgumentException("Invalid # of strings");
-		AbstractNGram<?> currGram = this;
-		for(int i = 0; i<words.length; i++){
-			currGram = currGram.getNGramsMap().computeIfAbsent(words[i], key -> new AbstractNGram<T>(getSmoothing(this),i+1) {
-			});
-		}
-		
-	}
-
-	
-	@SuppressWarnings("rawtypes")
+	/* Getters */
 	public Object2ObjectMap<String, AbstractNGram<?>> getNGramsMap(){
 		return m_ngrams;
 	}
-	public int getTotalCount(){
-		return i_totalCount;
-	}
 	
-	public int getKeyCount(){
-		return i_keyCount;
-	}
-	
-	public ISmoothing getSmoothing(){
-		return this.smoothing;
-	}
-
-
-	public void setTotalCount(int i_totalCount) {
-		this.i_totalCount = i_totalCount;
-	}
-
-
-	public void setKeyCount(int i_keyCount) {
-		this.i_keyCount = i_keyCount;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public void setSmoothing(ISmoothing smoothing) {
-		this.smoothing = smoothing;
-	}
-	
-	
-	
+	/* Abstract methods */
+	abstract public T getBest();
+	abstract public T getUnigramMap();
 }
