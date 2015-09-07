@@ -31,19 +31,19 @@ public abstract class AbstractNGram<T> implements Serializable{
 	private static final long serialVersionUID = 7598468521841113603L;
 
 	private final int N;
-	private int i_totalCount;
-	private int i_keyCount;
-	private ISmoothing smoothing;
-	private Object2ObjectMap<String, AbstractNGram> m_ngrams;
+	protected int i_totalCount;
+	protected int i_keyCount;
+	protected int i_skipOffset;
+	protected ISmoothing smoothing;
+	protected Object2ObjectMap<String, AbstractNGram<?>> m_ngrams;
 	
-	public AbstractNGram(int n){ 
-		N = n;
-	}
+	public AbstractNGram(int n){ N = n;}
 	
 	
-	public AbstractNGram(ISmoothing smoothing){
+	public AbstractNGram(ISmoothing smoothing, int n){
 		m_ngrams = new Object2ObjectOpenHashMap<>();
 		setSmoothing(smoothing);
+		N = n;
 	}
 	
 	public abstract T getBest();
@@ -63,11 +63,16 @@ public abstract class AbstractNGram<T> implements Serializable{
 	}
 	
 	public void add(long inc,String... words){
-		if(words.length != N) throw new IllegalArgumentException("");
+		if(words.length != N) throw new IllegalArgumentException("Invalid # of strings");
+		AbstractNGram<?> currGram = this;
+		for(int i = 0; i<words.length; i++){
+		}
+		
 	}
 
 	
-	public Object2ObjectMap<String, AbstractNGram> getNGramsMap(){
+	@SuppressWarnings("rawtypes")
+	public Object2ObjectMap<String, AbstractNGram<?>> getNGramsMap(){
 		return m_ngrams;
 	}
 	public int getTotalCount(){
