@@ -70,6 +70,8 @@ public abstract class AbstractNGram<T> implements Serializable{
 		if(words.length != N) throw new IllegalArgumentException("Invalid # of strings");
 		AbstractNGram<?> currGram = this;
 		for(int i = 0; i<words.length; i++){
+			currGram = currGram.getNGramsMap().computeIfAbsent(words[i], key -> new AbstractNGram<T>(getSmoothing(this),i+1) {
+			});
 		}
 		
 	}
