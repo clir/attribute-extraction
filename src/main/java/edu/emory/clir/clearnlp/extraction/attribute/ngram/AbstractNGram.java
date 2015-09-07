@@ -15,21 +15,12 @@
  */
 package edu.emory.clir.clearnlp.extraction.attribute.ngram;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
-import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.AbstractSmoothing;
-import edu.emory.mathcs.nlp.common.collection.tuple.ObjectDoublePair;
-import edu.emory.mathcs.nlp.common.collection.tuple.ObjectIntPair;
-import edu.emory.mathcs.nlp.common.util.FastUtils;
-import edu.emory.mathcs.nlp.common.util.MathUtils;
+import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.Smoothing;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 /**
  * @author 	Yu-Hsin(Henry) Chen ({@code yu-hsin.chen@emory.edu})
@@ -38,102 +29,74 @@ import edu.emory.mathcs.nlp.common.util.MathUtils;
  */
 public abstract class AbstractNGram<T> implements Serializable{
 	private static final long serialVersionUID = 7598468521841113603L;
+
+	private int i_totalCount;
+	private int i_keyCount;
+	private Smoothing smoothing;
+	private Object2ObjectMap<String, AbstractNGram> m_ngrams;
 	
-	protected T best;
-	protected int i_totalCount;
-	protected Object2IntMap<T> m_count;
-	protected AbstractSmoothing smoothing;
+	public AbstractNGram(){}
 	
-	public AbstractNGram() {
-		init(null);
+	
+	public AbstractNGram(Smoothing smoothing){
+		m_ngrams = new Object2ObjectOpenHashMap<>();
+		setSmoothing(smoothing);
 	}
 	
-	public AbstractNGram(AbstractSmoothing smoothing){
-		init(smoothing);
+	public abstract T getBest();
+	
+	public abstract T getUnigramMap();
+
+	public abstract Set<String> getWordSet();
+	
+	public void estimateLikelihood(){
+		smoothing.estimateMaximumLikelihoods(this);
 	}
 	
-	private void init(AbstractSmoothing smoothing){
+	
+	public double getLikelihood(String... words){
+		return 0;
+		
+	}
+	
+	public void add(long count,String... words){
+		
+	}
+
+	
+	public Object2ObjectMap<String, AbstractNGram> getNGramsMap(){
+		return m_ngrams;
+	}
+	public int getTotalCount(){
+		return i_totalCount;
+	}
+	
+	public int getKeyCount(){
+		return i_keyCount;
+	}
+	
+	public Smoothing getSmoothing(){
+		return this.smoothing;
+	}
+
+
+	public void setTotalCount(int i_totalCount) {
+		this.i_totalCount = i_totalCount;
+	}
+
+
+	public void setKeyCount(int i_keyCount) {
+		this.i_keyCount = i_keyCount;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setSmoothing(Smoothing smoothing) {
 		this.smoothing = smoothing;
-		m_count = new Object2IntOpenHashMap<>();	
 	}
 	
-	public void add(T key){
-		add(key, 1);
-	}
 	
-	public void add(T key, int inc){
-		int c = FastUtils.increment(m_count, key, inc);
-		if (best == null || get(best) < c) best = key;
-		i_totalCount += inc;
-	}
 	
-	public int get(T key){
-		return m_count.get(key);
-	}
-	
-	public ObjectDoublePair<T> getBest(){
-		 return (best != null) ? new ObjectDoublePair<T>(best, MathUtils.divide(get(best), i_totalCount)) : null;
-	}
-	
-	public boolean contains(T key){
-		return m_count.containsKey(key);
-	}
-	
-	public double getProbability(T key){
-		return MathUtils.divide(get(key), i_totalCount);
-	}
-	
-	public List<ObjectIntPair<T>> toList(int cutoff){
-		List<ObjectIntPair<T>> list = new ArrayList<>();
-		
-		for (Entry<T,Integer> p : m_count.entrySet())
-		{
-			if (p.getValue() > cutoff)
-				list.add(new ObjectIntPair<>(p.getKey(), p.getValue()));
-		}
-		
-		return list;
-	}
-	
-	public List<ObjectDoublePair<T>> toList(double threshold){
-		List<ObjectDoublePair<T>> list = new ArrayList<>();
-		double d;
-		
-		for (Entry<T,Integer> p : m_count.entrySet())
-		{
-			d = MathUtils.divide(p.getValue(), i_totalCount);
-			if (d > threshold) list.add(new ObjectDoublePair<T>(p.getKey(), d));
-		}
-		
-		return list;
-	}
-	
-	public Set<T> keySet(){
-		return keySet(0);
-	}
-	
-	/** @return a set of keys whose values are greater than the specific cutoff. */
-	public Set<T> keySet(int cutoff){
-		Set<T> set = new HashSet<>();
-		
-		for (Entry<T,Integer> p : m_count.entrySet())
-		{
-			if (p.getValue() > cutoff) set.add(p.getKey());
-		}
-		
-		return set;
-	}
-	
-	public Set<T> keySet(double threshold){
-		Set<T> set = new HashSet<>();
-		double d;
-		
-		for (Entry<T,Integer> p : m_count.entrySet())
-		{
-			d = MathUtils.divide(p.getValue(), i_totalCount);
-			if (d > threshold) set.add(p.getKey());
-		}
-		
-		return set;
-	}
 }
