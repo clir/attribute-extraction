@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.emory.clir.clearnlp.extraction.attribute.ngram;
+package edu.emory.clir.clearnlp.extraction.attribute.ngram.skipgram;
 
 
 /**
