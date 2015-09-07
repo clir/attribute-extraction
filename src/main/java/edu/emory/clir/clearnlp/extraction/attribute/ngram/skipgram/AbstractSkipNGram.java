@@ -15,12 +15,15 @@
  */
 package edu.emory.clir.clearnlp.extraction.attribute.ngram.skipgram;
 
+import java.io.Serializable;
+
+import edu.emory.clir.clearnlp.extraction.attribute.ngram.AbstractNGram;
 
 /**
  * @author 	Yu-Hsin(Henry) Chen ({@code yu-hsin.chen@emory.edu})
  * @version	1.0
- * @param <N>
- * @since 	Sep 4, 2015
+ * @since 	Sep 7, 2015
  */
-public abstract class AbstractSkipNGram {
+public abstract class AbstractSkipNGram<T extends AbstractNGram<T>> implements Serializable{
+	private static final long serialVersionUID = -4046350660766254025L;
 }
