@@ -26,4 +26,6 @@ import edu.emory.clir.clearnlp.extraction.attribute.ngram.AbstractNGram;
  */
 public abstract class AbstractSkipNGram<T extends AbstractNGram<T>> implements Serializable{
 	private static final long serialVersionUID = -4046350660766254025L;
+	
+	abstract 
 }

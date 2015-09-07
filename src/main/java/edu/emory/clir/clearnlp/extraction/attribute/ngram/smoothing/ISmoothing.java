@@ -2,7 +2,7 @@ package edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing;
 
 import edu.emory.clir.clearnlp.extraction.attribute.ngram.AbstractNGram;
 
-public interface Smoothing {
+public interface ISmoothing {
 	
 	
 	
@@ -11,7 +11,7 @@ public interface Smoothing {
 	
 	double getUnseenLikelihood();
 	
-	Smoothing createInstance();
+	ISmoothing createInstance();
 	
 
 

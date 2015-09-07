@@ -18,7 +18,7 @@ package edu.emory.clir.clearnlp.extraction.attribute.ngram;
 import java.io.Serializable;
 import java.util.Set;
 
-import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.Smoothing;
+import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.ISmoothing;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -32,13 +32,13 @@ public abstract class AbstractNGram<T> implements Serializable{
 
 	private int i_totalCount;
 	private int i_keyCount;
-	private Smoothing smoothing;
+	private ISmoothing smoothing;
 	private Object2ObjectMap<String, AbstractNGram> m_ngrams;
 	
 	public AbstractNGram(){}
 	
 	
-	public AbstractNGram(Smoothing smoothing){
+	public AbstractNGram(ISmoothing smoothing){
 		m_ngrams = new Object2ObjectOpenHashMap<>();
 		setSmoothing(smoothing);
 	}
@@ -75,7 +75,7 @@ public abstract class AbstractNGram<T> implements Serializable{
 		return i_keyCount;
 	}
 	
-	public Smoothing getSmoothing(){
+	public ISmoothing getSmoothing(){
 		return this.smoothing;
 	}
 
@@ -93,7 +93,7 @@ public abstract class AbstractNGram<T> implements Serializable{
 		return serialVersionUID;
 	}
 
-	public void setSmoothing(Smoothing smoothing) {
+	public void setSmoothing(ISmoothing smoothing) {
 		this.smoothing = smoothing;
 	}
 	
