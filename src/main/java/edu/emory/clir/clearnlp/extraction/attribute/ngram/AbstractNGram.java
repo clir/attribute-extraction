@@ -15,31 +15,95 @@
  */
 package edu.emory.clir.clearnlp.extraction.attribute.ngram;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.io.Serializable;
+
 import edu.emory.clir.clearnlp.extraction.attribute.ngram.smoothing.ISmoothing;
+import edu.emory.mathcs.nlp.common.collection.tuple.ObjectDoublePair;
 
 /**
  * @author 	Yu-Hsin(Henry) Chen ({@code yu-hsin.chen@emory.edu})
  * @version	1.0
  * @since 	Sep 7, 2015
  */
-public abstract class AbstractNGram<T> extends AbstractSuperNGram{
-	private static final long serialVersionUID = 7598468521841113603L;
-
-	protected Object2ObjectMap<String, AbstractNGram<?>> m_ngrams;
+public abstract class AbstractNGram<T> implements Serializable {
+	private static final long serialVersionUID = 155499806239279854L;
 	
-	public AbstractNGram(int n, ISmoothing smoothing){
-		super(n, smoothing);
-		m_ngrams = new Object2ObjectOpenHashMap<>();
+	protected final int N;
+	protected int i_totalCount;
+	protected int i_skipOffset;
+	
+	protected T best;
+	protected ISmoothing smoothing;
+	
+	public AbstractNGram(int n){ 
+		N = n; 
+		init(0, null);
+	}
+	
+	public AbstractNGram(int n, ISmoothing smoothing){ 
+		N = n;
+		init(0, smoothing);
+	}
+	
+	public AbstractNGram(int n, int skip, ISmoothing smoothing){ 
+		N = n;
+		init(skip, smoothing);
+	}
+	
+	private void init(int skip,  ISmoothing smoothing){
+		i_totalCount = 0;
+		i_skipOffset = skip;
+		setSmoothing(smoothing);
+		
 	}
 	
 	/* Getters */
-	public Object2ObjectMap<String, AbstractNGram<?>> getNGramsMap(){
-		return m_ngrams;
+	public int getN(){
+		return N;
+	}
+	
+	public int getSkipOffset(){
+		return i_skipOffset;
+	}
+
+	public int getTotalCount(){
+		return i_totalCount;
+	}
+	
+	public ISmoothing getSmoothing(){
+		return this.smoothing;
+	}
+	
+	/* Setters */
+	public void setSmoothing(ISmoothing smoothing) {
+		this.smoothing = smoothing;
 	}
 	
 	/* Abstract methods */
-	abstract public T getBest();
-	abstract public T getUnigramMap();
+	abstract public int getKeyCount();
+	abstract public void estimateLikelihood();
+	abstract public ObjectDoublePair<T> getBest();
+	
+	@SuppressWarnings("unchecked")
+	public void add(T... words){
+		addAux(1, words);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void add(int inc, T... words){
+		if(words.length != N) throw new IllegalArgumentException("Invalid # of strings");
+		addAux(inc, words);
+	}
+	
+	@SuppressWarnings("unchecked")
+	abstract protected void addAux(int inc, T... words);
+	
+	@SuppressWarnings("unchecked")
+	public double getLikelihood(T... words){
+		if(words.length != N) throw new IllegalArgumentException("Invalid # of strings");
+		return getLikelihoodAux(words);
+	}
+	
+	@SuppressWarnings("unchecked")
+	abstract protected double getLikelihoodAux(T... words);
 }
