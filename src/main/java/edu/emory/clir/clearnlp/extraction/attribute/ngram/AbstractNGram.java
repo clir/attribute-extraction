@@ -46,6 +46,10 @@ public abstract class AbstractNGram<T> implements Serializable{
 		N = n;
 	}
 	
+	public int getSkipOffset(){
+		return i_skipOffset;
+	}
+	
 	public abstract T getBest();
 	
 	public abstract T getUnigramMap();

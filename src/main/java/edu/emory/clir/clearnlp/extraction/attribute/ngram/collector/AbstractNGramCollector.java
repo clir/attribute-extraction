@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.emory.clir.clearnlp.extraction.attribute.ngram.skipgram;
-
-import java.io.Serializable;
+package edu.emory.clir.clearnlp.extraction.attribute.ngram.collector;
 
 import edu.emory.clir.clearnlp.extraction.attribute.ngram.AbstractNGram;
+import edu.emory.mathcs.nlp.common.util.Language;
 
 /**
  * @author 	Yu-Hsin(Henry) Chen ({@code yu-hsin.chen@emory.edu})
  * @version	1.0
  * @since 	Sep 7, 2015
  */
-public abstract class AbstractSkipNGram<T extends AbstractNGram<T>> implements Serializable{
-	private static final long serialVersionUID = -4046350660766254025L;
+public class AbstractNGramCollector {
 	
-	abstract 
+	protected Language l_language;
+	
+	protected int i_skipOffset;
+	protected AbstractNGram<?> ngram;
+	
+	public AbstractNGramCollector(Language language){
+		l_language = language;
+	}
 }
