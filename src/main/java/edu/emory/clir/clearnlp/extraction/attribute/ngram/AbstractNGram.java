@@ -30,12 +30,15 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 public abstract class AbstractNGram<T> implements Serializable{
 	private static final long serialVersionUID = 7598468521841113603L;
 
+	private final int N;
 	private int i_totalCount;
 	private int i_keyCount;
 	private ISmoothing smoothing;
 	private Object2ObjectMap<String, AbstractNGram> m_ngrams;
 	
-	public AbstractNGram(){}
+	public AbstractNGram(int n){ 
+		N = n;
+	}
 	
 	
 	public AbstractNGram(ISmoothing smoothing){
@@ -59,8 +62,8 @@ public abstract class AbstractNGram<T> implements Serializable{
 		
 	}
 	
-	public void add(long count,String... words){
-		
+	public void add(long inc,String... words){
+		if(words.length != N) throw new IllegalArgumentException("");
 	}
 
 	
