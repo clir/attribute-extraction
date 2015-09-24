@@ -71,7 +71,7 @@ public class EntityTokenCorpusReconstructor extends AbstractCorpusRecontructor{
 	private void init(){
 		switch (type) {
 			case RAW:	decoder = new NLPDecoder(TLanguage.ENGLISH);				break;
-			case TSV:	reader = new TSVReader(0, 1, 2, 3, 7, 4, 5, 6, -1, -1); 	break;
+			case TSV:	reader = new TSVReader(0, 1, 2, 3, 9, 4, 5, 6, 7, 8); 		break;
 		}
 	}
 

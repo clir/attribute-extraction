@@ -55,7 +55,7 @@ public class MultiTheadedCorpusReconstructor extends AbstractCorpusRecontructor{
 		AbstractCorpusRecontructor constructor_new;
 		ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 		for(i = 0; i < l_size; i+=b_size){
-			if(i+b_size >= l_size){
+			if(i+b_size < l_size){
 				constructor_new = constructor.clone();
 				constructor_new.setFilePaths(filePaths.subList(i, i+b_size));
 				executor.submit(constructor_new);
@@ -65,7 +65,6 @@ public class MultiTheadedCorpusReconstructor extends AbstractCorpusRecontructor{
 				executor.submit(constructor);
 			}
 		}
-		
 	}
 
 	@Override

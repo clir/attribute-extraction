@@ -20,6 +20,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import edu.emory.clir.clearnlp.util.DSUtils;
+import edu.emory.clir.clearnlp.util.FileUtils;
 
 /**
  * @author 	Yu-Hsin(Henry) Chen ({@code yu-hsin.chen@emory.edu})
@@ -27,15 +28,19 @@ import edu.emory.clir.clearnlp.util.DSUtils;
  * @since 	Sep 23, 2015
  */
 public class EntityTokenCorpusReconstructorTest{
-	public final Set<String> EXT = DSUtils.toHashSet(".txt");
-	public final String INPUT_DIR = "/Users/HenryChen/Documents/clearnlp-qa/corpus/NYT";
-	public final String OUPUT_DIR = "/Users/HenryChen/Documents/clearnlp-qa/corpus/NYT_OUT";
+	public final Set<String> EXT = DSUtils.toHashSet(".dep");
+	public final String INPUT_DIR = "/Users/HenryChen/Documents/clearnlp-qa/corpus/WSJ";
+	public final String OUPUT_DIR = "/Users/HenryChen/Documents/clearnlp-qa/corpus/WSJ_OUT";
 	public final Set<String> NERLabels = DSUtils.toHashSet("PERSON", "ORG", "LOC", "GPE");
 	
 	@Test
 	public void testReconstructor(){
+		System.out.println(INPUT_DIR);
+		System.out.println(FileUtils.getBaseName(INPUT_DIR));
+		System.out.println(FileUtils.getFileList(INPUT_DIR, ".dep", false));
+		
 		EntityTokenCorpusReconstructor constructor 
-			= new EntityTokenCorpusReconstructor(CorpusType.RAW, INPUT_DIR, OUPUT_DIR, EXT, NERLabels);
+			= new EntityTokenCorpusReconstructor(CorpusType.TSV, INPUT_DIR, OUPUT_DIR, EXT, NERLabels);
 		
 		constructor.reconstruct();
 	}
